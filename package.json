@@ -1,9 +1,9 @@
 {
   "name": "Reiki.js",
   "preferGlobal": true,
-  "version": "0.3.0",
+  "version": "0.0.0",
   "author": "Nodejitsu <support@nodejitsu.com>",
-  "description": "a minimal server side framework influenced by functional reactive programming",
+  "description": "A minimal server side framework influenced by functional reactive programming",
   "contributors": [ 
     {
       "name": "Patrick Stapleton",
@@ -20,7 +20,7 @@
     "predeploy": "echo This will be run before deploying the app",
     "postdeploy": "echo This will be run after deploying the app"
   },
-  "main": "./lib/http-server",
+  //"main": "./lib/http-server",
   "repository": {
     "type": "git",
     "url": "git@github.com:gdi2290/reiki.js.git"
@@ -31,10 +31,13 @@
     "server"
   ],
   "dependencies" : {
+    "rx" : "*",
 
   },
   "analyze": false,
   "devDependencies": {
+    "mocha": "*",
+    "should": "*",
 
   },
   "bundledDependencies": [
