@@ -20,7 +20,6 @@
     "predeploy": "echo This will be run before deploying the app",
     "postdeploy": "echo This will be run after deploying the app"
   },
-  //"main": "./lib/http-server",
   "repository": {
     "type": "git",
     "url": "git@github.com:gdi2290/reiki.js.git"
@@ -31,13 +30,14 @@
     "server"
   ],
   "dependencies" : {
-    "rx" : "*",
-
+    "underscore": "*",
+    "request": "*",
+    "rx" : "*"
   },
   "analyze": false,
   "devDependencies": {
     "mocha": "*",
-    "should": "*",
+    "should": "*"
 
   },
   "bundledDependencies": [
