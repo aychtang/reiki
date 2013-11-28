@@ -5,6 +5,8 @@
 
 var Reiki = function() {
   /*insert code here */
+
+
 };
 
 
