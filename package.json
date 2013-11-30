@@ -4,14 +4,18 @@
   "version": "0.0.0",
   "author": "Nodejitsu <support@nodejitsu.com>",
   "description": "A minimal server side framework influenced by functional reactive programming",
-  "contributors": [ 
+  "contributors": [
     {
       "name": "Patrick Stapleton",
-      "email": ""
+      "email": "patrick@gdi2290.com"
     },
     {
       "name": "Peter de Croos",
       "email": "cultofmetatron@aumlogic.com"
+    },
+    {
+      "name": "Howard Tang",
+      "email": "aychtang@gmail.com"
     }
   ],
   "scripts": {

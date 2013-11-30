@@ -1,5 +1,4 @@
 /*jslint indent: 2 */
-//var Server
 var engine = require('engine.io');
 var Rx = require('rx');
 
@@ -12,13 +11,14 @@ var Reiki = module.exports = function(options) {
   if (options.server) {
     this.server = options.server;
     engine.attach(this.server);
-    //this._createConnectionStream();
-
-  } else if (options.port) {
+    this._createConnectionStream();
+  }
+  else if (options.port) {
     this.server = engine;
     engine.listen(options.port);
-    //this._createConnectionStream();
-  } else {
+    this._createConnectionStream();
+  }
+  else {
     throw new Error('must include a valid port number or httpServer instance!!');
   }
 };
@@ -38,10 +38,4 @@ Reiki.prototype._createConnectionStream = function(server) {
     return socket;
   });
 };
-
-
-
-
-
-
 
