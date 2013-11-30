@@ -33,12 +33,14 @@
     "underscore": "*",
     "request": "*",
     "engine.io": "*",
-    "rx" : "*"
+    "rx" : "*",
+    "request": "*"
   },
   "analyze": false,
   "devDependencies": {
     "mocha": "*",
     "should": "*",
+    "casper": "*",
     "casperjs": "*",
     "mocha-casperjs": "*"
   },
