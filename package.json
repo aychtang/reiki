@@ -1,21 +1,17 @@
 {
-  "name": "reiki",
+  "name": "Reiki.js",
   "preferGlobal": true,
   "version": "0.0.0",
   "author": "Nodejitsu <support@nodejitsu.com>",
   "description": "A minimal server side framework influenced by functional reactive programming",
-  "contributors": [
+  "contributors": [ 
     {
-      "name": "Patrick Stapleton",
-      "email": "patrick@gdi2290.com"
+      "name": "Patrick Stapleton"
+      
     },
     {
       "name": "Peter de Croos",
       "email": "cultofmetatron@aumlogic.com"
-    },
-    {
-      "name": "Howard Tang",
-      "email": "aychtang@gmail.com"
     }
   ],
   "scripts": {
@@ -42,8 +38,9 @@
   "analyze": false,
   "devDependencies": {
     "mocha": "*",
-    "should": "*"
-
+    "should": "*",
+    "casperjs": "*",
+    "mocha-casperjs": "*"
   },
   "bundledDependencies": [
 
