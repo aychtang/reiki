@@ -40,9 +40,8 @@
   "devDependencies": {
     "mocha": "*",
     "should": "*",
-    "casper": "*",
-    "casperjs": "*",
-    "mocha-casperjs": "*"
+    "phantomjs": "*",
+    "mocha-phantomjs": "*"
   },
   "bundledDependencies": [
 
