@@ -32,6 +32,7 @@
   "dependencies" : {
     "underscore": "*",
     "request": "*",
+    "engine.io": "*",
     "rx" : "*"
   },
   "analyze": false,
