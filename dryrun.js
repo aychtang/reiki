@@ -10,5 +10,5 @@ var server = http.createServer(function() {
 
 var reikiServer = new Reiki({ server : server });
 
-console.log('lsitening on port 80');
-reikiServer.listen(80);
+console.log('lsitening on port 8080');
+reikiServer.listen(8080);
