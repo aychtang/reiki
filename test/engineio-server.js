@@ -5,17 +5,16 @@ var request = require('request');
 describe('engineioServer', function() {
   'use strict';
   describe('initialization', function() {
-    var server;
+    var reiki;
     var connectionUrl;
     before(function() {
       connectionUrl = 'http://' + configs.host + ':' + configs.port;
-      var Server = require('../mocks/simple-server.js');
-      server = Server();
-      
+      reiki = require('../mocks/engineio-server.js');
+      reiki.listen(8080);
     });
 
     after(function() {
-      server.close();
+      reiki.server.close();
     });
 
 
