@@ -15,8 +15,7 @@ var Reiki = function(options) {
     this._createConnectionStream();
   }
   else if (options.port) {
-    this.server = engine;
-    engine.listen(options.port);
+    this.server = engine.listen(options.port);
     this._createConnectionStream();
   }
   else {
@@ -36,28 +35,30 @@ Reiki.prototype._createConnectionStream = function(server) {
   });
 };
 
+module.exports = Reiki;
+
 // Public API
 // createEventStream - creates an event stream for each socket.
 // Save reference to stream as any new connections events must be added to stream.
 
-var r = new Reiki({
-  port: 8080
-});
+// var r = new Reiki({
+//   port: 8080
+// });
 
 // Use cases.
-var dcStream = r.createEventStream('disconnect');
-var messageStream = r.createEventStream('message');
-var users = {
-  'socket id': {
-    name: 'peter'
-  }
-};
+// var dcStream = r.createEventStream('disconnect');
+// var messageStream = r.createEventStream('message');
+// var users = {
+//   'socket id': {
+//     name: 'peter'
+//   }
+// };
 
-dcStream.subscribe(function(socket, event) {
-  users[socket.id] = null;
-  delete users[socket.id];
-});
+// dcStream.subscribe(function(socket, event) {
+//   users[socket.id] = null;
+//   delete users[socket.id];
+// });
 
-messageStream.subscribe(function(socket, data) {
-  socket.send('messageReceived', 'hello world');
-});
+// messageStream.subscribe(function(socket, data) {
+//   socket.send('messageReceived', 'hello world');
+// });
