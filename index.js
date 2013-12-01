@@ -2,8 +2,9 @@
 var engine = require('engine.io');
 var Rx = require('rx');
 
-/* we assume there is either a server option which will be an instance of
-* httpServer or a port which shall be a number
+/*
+* pass in options object which will contain instance of httpserver or a port 
+* which shall be a number.
 */
 var Reiki = function(options) {
   'use strict';
@@ -14,22 +15,50 @@ var Reiki = function(options) {
     this._createConnectionStream();
   }
   else if (options.port) {
-    this.server = engine;
-    engine.listen(options.port);
+    this.server = engine.listen(options.port);
     this._createConnectionStream();
   }
   else {
-    throw new Error('must include a valid port number or httpServer instance!!');
+    throw new Error('must include a valid port number or httpServer instance!');
   }
+  this.connectionStream.subscribe(function() {
+
+  });
 };
 
 Reiki.prototype = Object.create({});
 
 Reiki.prototype._createConnectionStream = function(server) {
   'use strict';
-    this.connectionStream = Rx.Node.fromEvent(this.server, 'connection', function(socket) {
-      return socket;
-    });
+  this.connectionStream = Rx.Node.fromEvent(this.server, 'connection', function(socket) {
+    return socket;
+  });
 };
 
-new Reiki({port:8080});
+module.exports = Reiki;
+
+// Public API
+// createEventStream - creates an event stream for each socket.
+// Save reference to stream as any new connections events must be added to stream.
+
+// var r = new Reiki({
+//   port: 8080
+// });
+
+// Use cases.
+// var dcStream = r.createEventStream('disconnect');
+// var messageStream = r.createEventStream('message');
+// var users = {
+//   'socket id': {
+//     name: 'peter'
+//   }
+// };
+
+// dcStream.subscribe(function(socket, event) {
+//   users[socket.id] = null;
+//   delete users[socket.id];
+// });
+
+// messageStream.subscribe(function(socket, data) {
+//   socket.send('messageReceived', 'hello world');
+// });

@@ -42,8 +42,9 @@
   "analyze": false,
   "devDependencies": {
     "mocha": "*",
-    "should": "*"
-
+    "should": "*",
+    "tape": "~2.3.0",
+    "engine.io-client": "~0.7.12"
   },
   "bundledDependencies": [
 
