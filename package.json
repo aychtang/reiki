@@ -41,7 +41,8 @@
     "mocha": "*",
     "should": "*",
     "phantomjs": "*",
-    "mocha-phantomjs": "*"
+    "mocha-phantomjs": "*",
+    "ws": "*"
   },
   "bundledDependencies": [
 
