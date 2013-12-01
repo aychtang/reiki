@@ -1,7 +1,7 @@
 /*jslint indent: 2 */
 var engine = require('engine.io');
 var Rx = require('rx');
-
+var EventEmitter = require('events').EventEmitter;
 /*
 * pass in options object which will contain instance of httpserver or a port 
 * which shall be a number.
@@ -12,26 +12,25 @@ var Reiki = function(options) {
   if (options.server) {
     this.server = options.server;
     engine.attach(this.server);
-    this._createConnectionStream();
+    this._createConnectionStream(this.server);
   }
   else if (options.port) {
     this.server = engine.listen(options.port);
-    this._createConnectionStream();
+    this._createConnectionStream(this.server);
   }
   else {
     throw new Error('must include a valid port number or httpServer instance!');
   }
-  this.connectionStream.subscribe(function() {
-
-  });
 };
 
 Reiki.prototype = Object.create({});
 
 Reiki.prototype._createConnectionStream = function(server) {
   'use strict';
-  this.connectionStream = Rx.Node.fromEvent(this.server, 'connection', function(socket) {
-    return socket;
+  var eventEmitter = new EventEmitter();
+  this.connectionStream = Rx.Observable.fromEvent(eventEmitter, 'connection');
+  this.server.on('connection', function(socket) {
+    eventEmitter.emit('connection', socket);
   });
 };
 
