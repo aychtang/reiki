@@ -9,8 +9,9 @@ describe('engineioServer', function() {
     var connectionUrl;
     before(function() {
       connectionUrl = 'http://' + configs.host + ':' + configs.port;
-      server = require('../mocks/simple-server.js');
-      server.listen(configs.port);
+      var Server = require('../mocks/simple-server.js');
+      server = Server();
+      
     });
 
     after(function() {
