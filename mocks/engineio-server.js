@@ -13,4 +13,3 @@ var server = function() {
 
 module.exports = new Reiki(server());
 
-
