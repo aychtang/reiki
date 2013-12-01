@@ -30,16 +30,16 @@ describe('engineioServer', function() {
       console.log('listening');
       reiki.listen(configs.port);
       console.log('sweet');
-      var io = require('socket.io-client');
-      var client = io.connect('http://' + connectionUrl);
-      console.log(client);
-      client.on('connect', function() {
-        client.on('echo', function(msg) {
-          msg.should.equal('hello world');
-          done();
-        });
-        client.emit('echo', 'hello world');
-      });
+      var client = require('engine.io-client')('ws://' + connectionUrl);
+      console.log('client emit:' + client.emit);
+      client.onopen = function() {
+        client.onmessage = function(data) {
+          console.log('go data: ', data);
+        };
+        client.onclose = function() {};
+        //client.emit('message', 'hello world');
+        client.send('shittzzz');
+      };
     });
   });
 });
