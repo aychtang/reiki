@@ -42,7 +42,8 @@
     "should": "*",
     "phantomjs": "*",
     "mocha-phantomjs": "*",
-    "ws": "*"
+    "ws": "*",
+    "socket.io-client":"*"
   },
   "bundledDependencies": [
 

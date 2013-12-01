@@ -16,11 +16,14 @@ var reiki = module.exports = new Reiki({server: server()});
 //you should update this to include the stream api, for now I'll use
 //the traditional calback style for the mock
 reiki.server.on('connection', function(socket) {
-  socket.on('message', function(msg) {
+  socket.on('echo', function(msg) {
+    console.log('from the server ' , arguments);
     socket.send(msg);
   });
+  socket.on('message', function() {
+    console.log('triggered message, see ', arguments);
+  });
 });
-
 
 
 
