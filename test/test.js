@@ -60,5 +60,27 @@ test('Should be able to create custom event streams on server side', function(t)
 	socket.onopen = function() {
 		socket.send('hello world');
 	};
+});
 
+test('Should squash all sockets events into one subject stream', function(t) {
+	t.plan(2);
+	var r = new Reiki({
+		port: 8084
+	});
+
+	var messageStream = r.createEventStream('message');
+
+	messageStream.subscribe(function(n) {
+		t.equal(n, 'hello world', 'received hello world message from stream.');
+	});
+
+	// Since message stream is a subject which streams message events for all sockets.
+	// The subscribed function should run twice.
+	var sendMessage = function() {
+		client1.send('hello world');
+	};
+
+	var client1 = eic('ws://localhost:8084');
+	var client2 = eic('ws://localhost:8084');
+	client1.onopen = client2.onopen = sendMessage;
 });
