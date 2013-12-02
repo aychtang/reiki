@@ -1,52 +1,43 @@
 /*jslint indent: 2 */
-var engine = require('engine.io');
+// var engine = require('engine.io');
+var io = require('socket.io');
 var Rx = require('rx');
 var EventEmitter = require('events').EventEmitter;
 
-/*
-* pass in options object which will contain instance of httpserver or a port 
-* which shall be a number.
-*/
-var Reiki = function(options) {
+
+// Pass in listento which will be an instance of httpserver or a port number
+var Reiki = function(listenTo) {
   'use strict';
-  // engine.io is an eventemitter so we create a stream around the connect
+  // Map of event types and subject stream objects.
+  // {Socket Event type : Rx.Subject}
   this.subjects = {};
-  if (options.server) {
-    this.server = options.server;
-    this.io = engine.attach(options.server);
-    this._createConnectionStream(this.io);
-  }
-  else if (options.port) {
-    this.io = engine.listen(options.port);
-    this._createConnectionStream(this.io);
-  }
+
+  this.io = io.listen(listenTo);
+  this._init(this.io);
+  // Instantiate engine server depending on option.
+  // if (options.server) {
+  //   this.server = options.server;
+  //   this.io = engine.attach(options.server);
+  //   this._createConnectionStream(this.io);
+  // }
+  // else if (options.port) {
+  //   this.io = engine.listen(options.port);
+  //   this._createConnectionStream(this.io);
+  // }
 };
 
 Reiki.prototype = Object.create({});
 
-Reiki.prototype._createConnectionStream = function(server) {
-  'use strict';
+Reiki.prototype._init = function(io) {
   var that = this;
-  var eventEmitter = new EventEmitter();
-  this.connectionStream = Rx.Observable.fromEvent(eventEmitter, 'connection');
-  this.io.on('connection', function(socket) {
+  io.on('connection', function(socket) {
     for (var subject in that.subjects) {
       that._addToEventStream(socket, subject);
     }
-    eventEmitter.emit('connection', socket);
   });
 };
 
-Reiki.prototype.stop = function(callback) {
-  try {
-    this.io.close();
-  }
-  catch (e) {
-    console.log(e);
-  }
-};
-
-Reiki.prototype.ensureEventStream = function(ev) {
+Reiki.prototype._ensureEventStream = function(ev) {
   if (!this.subjects[ev]) {
     this.subjects[ev] = new Rx.Subject();
   }
@@ -54,13 +45,23 @@ Reiki.prototype.ensureEventStream = function(ev) {
 };
 
 Reiki.prototype.createEventStream = function(ev) {
-  return this.ensureEventStream(ev);
+  return this._ensureEventStream(ev);
 };
 
 Reiki.prototype._addToEventStream = function(socket, ev) {
   var newStream = Rx.Observable.fromEvent(socket, ev);
-  newStream.subscribe(this.ensureEventStream(ev));
+  newStream.subscribe(this._ensureEventStream(ev));
   return newStream;
+};
+
+// Doesn't work? wat.
+Reiki.prototype.stop = function(callback) {
+  try {
+    this.io.server.close();
+  }
+  catch (e) {
+    console.log(e);
+  }
 };
 
 module.exports = Reiki;

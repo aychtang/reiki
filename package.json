@@ -2,7 +2,6 @@
   "name": "Reiki.js",
   "preferGlobal": true,
   "version": "0.0.0",
-  "author": "Nodejitsu <support@nodejitsu.com>",
   "description": "A minimal server side framework influenced by functional reactive programming",
   "contributors": [
     {
@@ -19,36 +18,27 @@
     }
   ],
   "scripts": {
-    "start": "node ./bin/http-server",
-    "test": "vows --spec --isolate",
-    "predeploy": "echo This will be run before deploying the app",
-    "postdeploy": "echo This will be run after deploying the app"
+    "test": "node test/test.js"
   },
   "repository": {
     "type": "git",
     "url": "git@github.com:gdi2290/reiki.js.git"
   },
   "keywords": [
-    "cli",
-    "http",
-    "server"
+    "FRP",
+    "websockets",
+    "socket.io"
   ],
   "dependencies" : {
     "underscore": "*",
-    "request": "*",
-    "engine.io": "*",
+    "socket.io": "0.9.16",
     "rx" : "*"
   },
   "analyze": false,
   "devDependencies": {
-    "mocha": "*",
-    "should": "*",
     "tape": "~2.3.0",
-    "engine.io-client": "~0.7.12"
+    "socket.io-client": "~0.9.16"
   },
-  "bundledDependencies": [
-
-  ],
   "license": "MIT",
   "engines": {
     "node": ">=0.10.22"
