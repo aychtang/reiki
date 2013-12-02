@@ -10,6 +10,8 @@ var EventEmitter = require('events').EventEmitter;
 var Reiki = function(options) {
   'use strict';
   // engine.io is an eventemitter so we create a stream around the connect
+  this.eventStreams = {};
+  this.subjects = {};
   if (options.server) {
     this.server = options.server;
     this.io = engine.attach(options.server);
@@ -19,18 +21,19 @@ var Reiki = function(options) {
     this.io = engine.listen(options.port);
     this._createConnectionStream(this.io);
   }
-  else {
-    throw new Error('must include a valid port number or httpServer instance!');
-  }
 };
 
 Reiki.prototype = Object.create({});
 
 Reiki.prototype._createConnectionStream = function(server) {
   'use strict';
+  var that = this;
   var eventEmitter = new EventEmitter();
   this.connectionStream = Rx.Observable.fromEvent(eventEmitter, 'connection');
   this.io.on('connection', function(socket) {
+    for (var subject in that.subjects) {
+      that._addToEventStream(socket, subject);
+    }
     eventEmitter.emit('connection', socket);
   });
 };
@@ -42,6 +45,22 @@ Reiki.prototype.stop = function(callback) {
   catch (e) {
     console.log(e);
   }
+};
+
+Reiki.prototype.createEventStream = function(ev) {
+  if (!this.subjects[ev]) {
+    this.subjects[ev] = new Rx.Subject();
+  }
+  return this.subjects[ev];
+};
+
+Reiki.prototype._addToEventStream = function(socket, ev) {
+  var newStream = Rx.Observable.fromEvent(socket, ev);
+  if (!this.subjects[ev]) {
+    this.subjects[ev] = new Rx.Subject();
+  }
+  newStream.subscribe(this.subjects[ev]);
+  return newStream;
 };
 
 module.exports = Reiki;
