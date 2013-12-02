@@ -10,7 +10,6 @@ var EventEmitter = require('events').EventEmitter;
 var Reiki = function(options) {
   'use strict';
   // engine.io is an eventemitter so we create a stream around the connect
-  this.eventStreams = {};
   this.subjects = {};
   if (options.server) {
     this.server = options.server;
@@ -47,19 +46,20 @@ Reiki.prototype.stop = function(callback) {
   }
 };
 
-Reiki.prototype.createEventStream = function(ev) {
+Reiki.prototype.ensureEventStream = function(ev) {
   if (!this.subjects[ev]) {
     this.subjects[ev] = new Rx.Subject();
   }
   return this.subjects[ev];
 };
 
+Reiki.prototype.createEventStream = function(ev) {
+  return this.ensureEventStream(ev);
+};
+
 Reiki.prototype._addToEventStream = function(socket, ev) {
   var newStream = Rx.Observable.fromEvent(socket, ev);
-  if (!this.subjects[ev]) {
-    this.subjects[ev] = new Rx.Subject();
-  }
-  newStream.subscribe(this.subjects[ev]);
+  newStream.subscribe(this.ensureEventStream(ev));
   return newStream;
 };
 
