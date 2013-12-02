@@ -3,6 +3,8 @@ var Rx = require('rx');
 var sic = require('socket.io-client');
 var test = require('tape');
 
+// Each server instance takes likes 10s to go offline after reiki.stop() is called.
+// There will be wait time for test report after all tests complete.
 test('Should be able to create and subscribe to custom event stream.', function(t) {
 	t.plan(1);
 	var r = new Reiki(8080);
@@ -19,6 +21,8 @@ test('Should be able to create and subscribe to custom event stream.', function(
 	});
 });
 
+
+// Old tests to be rebuilt.
 // test('Connection stream events should have a socket object.', function(t) {
 // 	t.plan(1);
 // 	var r = new Reiki({
