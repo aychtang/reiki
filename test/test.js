@@ -1,4 +1,5 @@
 var Reiki = require('../index.js');
+var Rx = require('rx');
 var eic = require('engine.io-client');
 var test = require('tape');
 
@@ -43,4 +44,21 @@ test('Should be able to be instantiated from httpServer option', function(t) {
 		t.end();
 	});
 	var socket = eic('ws://localhost:8002');
+});
+
+test('Should be able to create custom event streams on server side', function(t) {
+	var r = new Reiki({
+		port: 8083
+	});
+	// message is a subject which streams message events for all sockets connected.
+	r.createEventStream('message')
+		.subscribe(function(n) {
+			t.equal(n, 'hello world', 'received hello world message from stream.');
+			t.end();
+		});
+	var socket = eic('ws://localhost:8083');
+	socket.onopen = function() {
+		socket.send('hello world');
+	};
+
 });
