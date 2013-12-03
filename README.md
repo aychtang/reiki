@@ -4,7 +4,7 @@ reiki
 An Rx.js wrapper which provides a stream-like API for building applications
 with socket.io.
 
-## Documentation
+## Server API Documentation
 
 ### createEventStream(eventName)
 
