@@ -5,6 +5,7 @@
     </head>
     <body>
         <input class="submit" type="text" placeholder="hit enter to send to server.">
+        <script src="./public/components/rxjs/rx.lite.js"></script>
         <script src="./public/components/socket.io-client/dist/socket.io.min.js"></script>
         <script>
             // Reiki Example.
@@ -13,13 +14,26 @@
             var sendMessage = function(str) {
                 socket.emit('customMessage', str);
             };
+            var clear = function(inputEl) {
+                inputEl.value = '';
+            };
             var input = document.querySelector('.submit');
-            input.addEventListener('keydown', function(e) {
-                if (e.keyCode == '13') {
-                    sendMessage(input.value);
-                    input.value = '';
-                }
-            });
+            // Create readable event stream from keydown event on input el.
+            var inputEventStream = Rx.Observable.fromEvent(input, 'keydown');
+
+            inputEventStream
+                // Creates new stream of events that pass filter function.
+                .filter(function(e) {
+                    return e.keyCode === 13;
+                })
+                .map(function(e) {
+                    return input.value;
+                })
+                // Subscribes and runs function upon streamed event.
+                .subscribe(function(v) {
+                    sendMessage(v);
+                    clear(input);
+                });
         </script>
     </body>
 </html>

@@ -13,5 +13,8 @@
     "public/components",
     "test",
     "tests"
-  ]
+  ],
+  "dependencies": {
+    "rxjs": "~2.2.9"
+  }
 }
