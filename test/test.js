@@ -3,6 +3,16 @@ var Rx = require('rx');
 var sic = require('socket.io-client');
 var test = require('tape');
 
+var done = function(clients, subs, r) {
+	for (var i = 0; i < clients.length; i++) {
+		clients[i].disconnect();
+	}
+	for (var i = 0; i < subs.length; i++) {
+		subs[i].dispose();
+	}
+	r.stop();
+};
+
 // Each server instance takes likes 10s to go offline after reiki.stop() is called.
 // There will be wait time for test report after all tests complete.
 test('Should be able to create and subscribe to custom event stream.', function(t) {
@@ -10,10 +20,8 @@ test('Should be able to create and subscribe to custom event stream.', function(
 	var r = new Reiki(8080);
 	var messageStream = r.createEventStream('hello');
 	var sub = messageStream.subscribe(function(data) {
-		sub.dispose();
-		socket.disconnect();
-		r.stop();
 		t.equal(data, 'hello world');
+		done([socket], [sub], r);
 	});
 	var socket = sic.connect('ws://localhost:8080');
 	socket.on('connect', function() {
@@ -21,6 +29,27 @@ test('Should be able to create and subscribe to custom event stream.', function(
 	});
 });
 
+test('Should squash all socket event streams into one main subject stream', function(t) {
+	t.plan(2);
+	var messages = 2;
+	var r = new Reiki(8081);
+	var messageStream = r.createEventStream('messages');
+	var sendMessage = function() {
+		this.emit('messages', 'hello world');
+	};
+	var sub = messageStream.subscribe(function(n) {
+		t.equal(n, 'hello world', 'received hello world message from stream.');
+		--messages || done([client1, client2], [sub], r);
+	});
+	var client1 = sic.connect('ws://localhost:8081');
+	var client2 = sic.connect('ws://localhost:8081');
+	client1.on('connect', sendMessage.bind(client1));
+	client2.on('connect', sendMessage.bind(client2));
+});
+
+// test('Should be able to push messages to client from server', function(t) {
+// 	t.plan(1);
+// });
 
 // Old tests to be rebuilt.
 // test('Connection stream events should have a socket object.', function(t) {
@@ -90,17 +119,4 @@ test('Should be able to create and subscribe to custom event stream.', function(
 
 // 	var messageStream = r.createEventStream('message');
 
-// 	messageStream.subscribe(function(n) {
-// 		t.equal(n, 'hello world', 'received hello world message from stream.');
-// 	});
-
-// 	// Since message stream is a subject which streams message events for all sockets.
-// 	// The subscribed function should run twice.
-// 	var sendMessage = function() {
-// 		client1.send('hello world');
-// 	};
-
-// 	var client1 = eic('ws://localhost:8084');
-// 	var client2 = eic('ws://localhost:8084');
-// 	client1.onopen = client2.onopen = sendMessage;
 // });
