@@ -1,13 +1,12 @@
 var io = require('socket.io');
+var _ = require('underscore');
 var Rx = require('rx');
 
 // Pass in listento which will be an instance of httpserver or a port number.
 // Same as expected socket.io listen arguments.
 var Reiki = function(listenTo) {
-  // Map of event types and subject stream objects.
-  // {Socket Event type : Rx.Subject}
   this.subjects = {};
-  this.connections = [];
+  this.connectionsById = {};
   this.io = io.listen(listenTo);
   this._init(this.io);
 };
@@ -17,11 +16,18 @@ Reiki.prototype = Object.create({});
 Reiki.prototype._init = function(io) {
   var that = this;
   io.on('connection', function(socket) {
-    that.connections.push(socket);
-    for (var subject in that.subjects) {
-      that._addToEventStream(socket, subject);
-    }
+    _.each(that.subjects, function(subject, eventType) {
+      that._addToEventStream(socket, eventType);
+    });
   });
+};
+
+Reiki.prototype._getSocketById = function(id) {
+  return this.connectionsById[id];
+};
+
+Reiki.prototype._addSocketById = function(socket, id) {
+  return this.connectionsById[id] = socket;
 };
 
 // Creates a new Subject instance for each event type.
@@ -45,11 +51,15 @@ Reiki.prototype._addToEventStream = function(socket, ev) {
   return newStream;
 };
 
+// Create a new event type which adds socket data.
+// Reiki.prototype._transformEvent = function(socket, ev) {
+//   socket.on(ev, function(arg) {
+//     socket.emit('reiki-' + ev, arg, socket.id);
+//   });
+// };
+
 Reiki.prototype.stop = function(callback) {
   try {
-    for (var i = 0; i < this.connections.length; i++) {
-      this.connections[i].disconnect();
-    }
     this.io.server.close();
   }
   catch (e) {
@@ -58,3 +68,12 @@ Reiki.prototype.stop = function(callback) {
 };
 
 module.exports = Reiki;
+
+
+// Individual socket arg feature.
+// - create map of sockets to their ids.
+// - create custom event emitter with sockets.
+// - create observable stream from this new event.
+// - subscribe to new stream with subject object.
+
+// - should work.
