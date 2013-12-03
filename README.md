@@ -22,11 +22,13 @@ Functions that are subscribed to Reiki event streams will receive one argument w
 var Reiki = require('../../index.js');
 var r = new Reiki(8080);
 
-// Create an event stream which sends out an event whenever any socket connected has received the newmessage event.
+// Create an event stream which sends out an event whenever any socket connected
+// has received the newmessage event.
 var messageStream = r.createEventStream('newMessage');
 
 // Observe the message event stream and specify the function to be invoked.
 messageStream.subscribe(function(data) {
+	// Data contains a socket and message property.
 	data.socket.broadcast.emit('newMessage', data.message);
 });
 
