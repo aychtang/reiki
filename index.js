@@ -5,9 +5,7 @@ var Rx = require('rx');
 // Pass in listento which will be an instance of httpserver or a port number.
 // Same as expected socket.io listen arguments.
 var Reiki = function(listenTo) {
-  this.transformers = {};
   this.subjects = {};
-  this.connectionsById = {};
   this.io = io.listen(listenTo);
   this._init(this.io);
 };
@@ -21,14 +19,6 @@ Reiki.prototype._init = function(io) {
       that._addToEventStream(socket, eventType);
     });
   });
-};
-
-Reiki.prototype._getSocketById = function(id) {
-  return this.connectionsById[id];
-};
-
-Reiki.prototype._addSocketById = function(socket, id) {
-  return this.connectionsById[id] = socket;
 };
 
 // Creates a new Subject instance for each event type.
@@ -70,12 +60,3 @@ Reiki.prototype.stop = function(callback) {
 };
 
 module.exports = Reiki;
-
-
-// Individual socket arg feature.
-// - create map of sockets to their ids.
-// - create custom event emitter with sockets.
-// - create observable stream from this new event.
-// - subscribe to new stream with subject object.
-
-// - should work.
