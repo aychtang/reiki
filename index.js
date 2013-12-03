@@ -5,6 +5,7 @@ var Rx = require('rx');
 // Pass in listento which will be an instance of httpserver or a port number.
 // Same as expected socket.io listen arguments.
 var Reiki = function(listenTo) {
+  this.transformers = {};
   this.subjects = {};
   this.connectionsById = {};
   this.io = io.listen(listenTo);
@@ -44,19 +45,20 @@ Reiki.prototype.createEventStream = function(ev) {
   return this._ensureEventStream(ev);
 };
 
-// Subscribes appropriate subject stream to individual sockets event stream.
+// Subscribes appropriate subject newStream to individual sockets event stream.
 Reiki.prototype._addToEventStream = function(socket, ev) {
-  var newStream = Rx.Observable.fromEvent(socket, ev);
+  var newStream = new Rx.Subject();
+  socket.on(ev, function(data) {
+    newStream.onNext({
+      socket: socket,
+      message: data
+    });
+  });
+
   newStream.subscribe(this._ensureEventStream(ev));
+
   return newStream;
 };
-
-// Create a new event type which adds socket data.
-// Reiki.prototype._transformEvent = function(socket, ev) {
-//   socket.on(ev, function(arg) {
-//     socket.emit('reiki-' + ev, arg, socket.id);
-//   });
-// };
 
 Reiki.prototype.stop = function(callback) {
   try {

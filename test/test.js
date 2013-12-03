@@ -19,8 +19,8 @@ test('Should be able to create and subscribe to custom event stream.', function(
 	t.plan(1);
 	var r = new Reiki(8080);
 	var messageStream = r.createEventStream('hello');
-	var sub = messageStream.subscribe(function(data) {
-		t.equal(data, 'hello world');
+	var sub = messageStream.subscribe(function(e) {
+		t.equal(e.message, 'hello world');
 		done([socket], [sub], r);
 	});
 	var socket = sic.connect('ws://localhost:8080');
@@ -37,8 +37,8 @@ test('Should squash all socket event streams into one main subject stream', func
 	var sendMessage = function() {
 		this.emit('messages', 'hello world');
 	};
-	var sub = messageStream.subscribe(function(n) {
-		t.equal(n, 'hello world', 'received hello world message from stream.');
+	var sub = messageStream.subscribe(function(e) {
+		t.equal(e.message, 'hello world', 'received hello world message from stream.');
 		--messages || done([client1, client2], [sub], r);
 	});
 	var client1 = sic.connect('ws://localhost:8081');
