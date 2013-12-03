@@ -1,0 +1,17 @@
+{
+  "name": "helloworld",
+  "version": "0.0.0",
+  "homepage": "https://github.com/gdi2290/reiki.js",
+  "authors": [
+    "Howard Tang <tangh@google.com>"
+  ],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "public/components",
+    "test",
+    "tests"
+  ]
+}

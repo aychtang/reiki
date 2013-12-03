@@ -1,0 +1,25 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Hello Reiki</title>
+    </head>
+    <body>
+        <input class="submit" type="text" placeholder="hit enter to send to server.">
+        <script src="./public/components/socket.io-client/dist/socket.io.min.js"></script>
+        <script>
+            // Reiki Example.
+            // All messages from client should be logged in server console.
+            var socket = io.connect('ws://localhost:8080');
+            var sendMessage = function(str) {
+                socket.emit('customMessage', str);
+            };
+            var input = document.querySelector('.submit');
+            input.addEventListener('keydown', function(e) {
+                if (e.keyCode == '13') {
+                    sendMessage(input.value);
+                    input.value = '';
+                }
+            });
+        </script>
+    </body>
+</html>
