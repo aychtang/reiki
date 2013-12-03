@@ -27,11 +27,11 @@
                     return e.keyCode === 13;
                 })
                 .map(function(e) {
-                    return input.value;
+                    return e.currentTarget;
                 })
                 // Subscribes and runs function upon streamed event.
-                .subscribe(function(v) {
-                    sendMessage(v);
+                .subscribe(function(input) {
+                    sendMessage(input.value);
                     clear(input);
                 });
         </script>
