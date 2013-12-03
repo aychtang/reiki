@@ -1,0 +1,60 @@
+<!doctype html>
+<html>
+    <head>
+        <title>Reiki Chat</title>
+    </head>
+    <body>
+        <div class="messages">
+            <ul>
+            </ul>
+        </div>
+        <input class="submit" type="text" placeholder="hit enter to send to server.">
+        <script src="./public/components/rxjs/rx.lite.js"></script>
+        <script src="./public/components/socket.io-client/dist/socket.io.min.js"></script>
+        <script>
+            // Reiki Example.
+            var name = prompt('enter username');
+            var socket = io.connect('ws://localhost:8080');
+            var appendMessage = function(name, str) {
+                var msgEl = document.querySelector('.messages');
+                msgEl.innerHTML += '<li><h3>' + name + '</h3>' +
+                    '<p>' + str + '</p>' +
+                    '</li>';
+            };
+            var sendMessage = function(str) {
+                socket.emit('newMessage', JSON.stringify({
+                    name: name || 'guest',
+                    msg: str
+                }));
+            };
+            var clear = function(inputEl) {
+                inputEl.value = '';
+            };
+            var input = document.querySelector('.submit');
+            var inputEventStream = Rx.Observable.fromEvent(input, 'keydown');
+
+            inputEventStream
+                .filter(function(e) {
+                    return e.keyCode === 13;
+                })
+                .map(function(e) {
+                    return e.currentTarget.value;
+                })
+                .subscribe(function(v) {
+                    sendMessage(v);
+                    appendMessage(name || 'guest', v);
+                    clear(input);
+                });
+
+            var messageStream = Rx.Observable.fromEvent(socket, 'newMessage');
+            messageStream
+                .map(function(data) {
+                    return JSON.parse(data);
+                })
+                .subscribe(function(data) {
+                    appendMessage(data.name, data.message);
+                });
+
+        </script>
+    </body>
+</html>
