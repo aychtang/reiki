@@ -34,7 +34,7 @@ messageStream.subscribe(function(data) {
 
 ```
 
-## Documentation
+## Server API Documentation
 
 ### createEventStream(eventName)
 

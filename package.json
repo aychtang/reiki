@@ -1,5 +1,5 @@
 {
-  "name": "Reiki.js",
+  "name": "reiki",
   "preferGlobal": true,
   "version": "0.0.0",
   "description": "A minimal server side framework influenced by functional reactive programming",
