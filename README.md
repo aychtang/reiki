@@ -15,7 +15,7 @@ Functions that are subscribed to Reiki event streams will receive one argument w
 - socket: Socket instance.
 - message: data sent from the client.
 
-### Hello world
+### Chat Server
 
 ```js
 
