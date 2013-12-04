@@ -36,6 +36,10 @@ messageStream.subscribe(function(data) {
 
 ## Server API Documentation
 
+### new Reiki(port || server)
+#### Constructor
+Creates a new Reiki instance which starts listening for socket connections on the port or server passed.
+
 ### createEventStream(eventName)
 
 Returns a subject event stream which broadcasts events for each independant socket connection.
