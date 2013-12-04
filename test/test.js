@@ -67,7 +67,7 @@ test('Should be able to create an eventStrem for socket disconnection events', f
 	t.plan(3);
 	var r = new Reiki(8085);
 	var disconnectStream = r.createEventStream('disconnect');
-	disconnectStream.subscribe(function(d) {
+	var dcsub = disconnectStream.subscribe(function(d) {
 		t.ok(d.socket, 'arg has socket property.');
 		t.ok(d.message, 'arg has message property.');
 		t.pass('disconnect event handled correctly.')
