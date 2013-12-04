@@ -2,6 +2,7 @@ var Reiki = require('../index.js');
 var Rx = require('rx');
 var sic = require('socket.io-client');
 var test = require('tape');
+var http = require('http');
 
 var done = function(clients, r) {
 	for (var i = 0; i < clients.length; i++) {
@@ -64,7 +65,7 @@ test('Should be able to push messages to client from server', function(t) {
 
 test('Should be able to be instantiated from httpServer', function(t) {
 	t.plan(1);
-	var server = require('http').createServer(handler);
+	var server = http.createServer(handler);
 
 	var handler = function(request, response) {
 		response.end('hello world');
@@ -82,3 +83,23 @@ test('Should be able to be instantiated from httpServer', function(t) {
 		socket.emit('messages', 12);
 	});
 });
+
+test('Should be able to be intantiated with express application', function(t) {
+	t.plan(1);
+	var app = require('express')();
+	var server = http.createServer(app);
+	server.listen(8084);
+	var r = new Reiki(server);
+	var eventStream = r.createEventStream('messages');
+	eventStream.subscribe(function(d) {
+		t.equal(d.message, 15);
+		done([socket], r);
+	});
+	var socket = sic.connect('ws://localhost:8084');
+	socket.on('connect', function() {
+		socket.emit('messages', 15);
+	});
+});
+// Disconnection test.
+// Broadcast socket test.
+// Socket.set test.
