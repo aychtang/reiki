@@ -30,9 +30,9 @@
     "socket.io"
   ],
   "dependencies" : {
-    "underscore": "*",
-    "socket.io": "0.9.16",
-    "rx" : "*"
+    "underscore": "~1.5.2",
+    "socket.io": "~0.9.16",
+    "rx" : "~2.2.9"
   },
   "analyze": false,
   "devDependencies": {
