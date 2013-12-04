@@ -63,6 +63,22 @@ test('Should be able to push messages to client from server', function(t) {
 	});
 });
 
+test('Should be able to create an eventStrem for socket disconnection events', function(t) {
+	t.plan(3);
+	var r = new Reiki(8085);
+	var disconnectStream = r.createEventStream('disconnect');
+	disconnectStream.subscribe(function(d) {
+		t.ok(d.socket, 'arg has socket property.');
+		t.ok(d.message, 'arg has message property.');
+		t.pass('disconnect event handled correctly.')
+		done([socket], r);
+	});
+	var socket = sic.connect('ws://localhost:8085');
+	socket.on('connect', function() {
+		socket.disconnect();
+	});
+});
+
 test('Should be able to be instantiated from httpServer', function(t) {
 	t.plan(1);
 	var server = http.createServer(handler);
@@ -100,6 +116,6 @@ test('Should be able to be intantiated with express application', function(t) {
 		socket.emit('messages', 15);
 	});
 });
-// Disconnection test.
+
 // Broadcast socket test.
 // Socket.set test.
