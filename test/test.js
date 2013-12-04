@@ -62,18 +62,23 @@ test('Should be able to push messages to client from server', function(t) {
 	});
 });
 
-// Old tests to be rebuilt.
+test('Should be able to be instantiated from httpServer', function(t) {
+	t.plan(1);
+	var server = require('http').createServer(handler);
 
-// test('Should be able to be instantiated from httpServer option', function(t) {
-// 	t.plan(1);
-// 	var http = require('http').createServer().listen(8002);
-// 	var r = new Reiki({
-// 		server: http
-// 	});
-// 	r.connectionStream.subscribe(function(socket) {
-// 		t.ok(socket, ' has a socket');
-// 		t.end();
-// 	});
-// 	var socket = eic('ws://localhost:8002');
-// });
+	var handler = function(request, response) {
+		response.end('hello world');
+	};
 
+	server.listen(8083);
+	var r = new Reiki(server);
+	var eventStream = r.createEventStream('messages');
+	eventStream.subscribe(function(d) {
+		t.equal(d.message, 12);
+		done([socket], r);
+	});
+	var socket = sic.connect('ws://localhost:8083');
+	socket.on('connect', function() {
+		socket.emit('messages', 12);
+	});
+});
