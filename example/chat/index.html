@@ -17,7 +17,8 @@
             var socket = io.connect('ws://localhost:8080');
             var appendMessage = function(name, str) {
                 var msgEl = document.querySelector('.messages');
-                msgEl.innerHTML += '<li><h3>' + name + '</h3>' +
+                msgEl.innerHTML += '<li>' +
+                    '<h3>' + name + '</h3>' +
                     '<p>' + str + '</p>' +
                     '</li>';
             };
@@ -38,11 +39,12 @@
                     return e.keyCode === 13;
                 })
                 .map(function(e) {
-                    return e.currentTarget.value;
+                    return e.currentTarget;
                 })
-                .subscribe(function(v) {
-                    sendMessage(v);
-                    appendMessage(name || 'guest', v);
+                .subscribe(function(input) {
+                    var value = input.value;
+                    sendMessage(value);
+                    appendMessage(name || 'guest', value);
                     clear(input);
                 });
 
