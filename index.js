@@ -24,7 +24,6 @@ Reiki.prototype._init = function(io) {
       that._addToEventStream(socket, eventType);
     });
   });
-
 };
 
 Reiki.prototype._addConnectionById = function(socket) {

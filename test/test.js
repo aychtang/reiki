@@ -11,6 +11,14 @@ var done = function(clients, r) {
 	r.stop();
 };
 
+// Force new connections for multi-client tests.
+var connect = function(url) {
+	var socket = sic.connect(url, {
+		'force new connection': true
+	});
+	return socket;
+};
+
 // Each server instance takes likes 10s to go offline after reiki.stop() is called.
 // There will be wait time for test report after all tests complete.
 test('Should be able to create and subscribe to custom event stream.', function(t) {
@@ -21,7 +29,7 @@ test('Should be able to create and subscribe to custom event stream.', function(
 		t.equal(e.message, 'hello world');
 		done([socket], r);
 	});
-	var socket = sic.connect('ws://localhost:8080');
+	var socket = connect('ws://localhost:8080');
 	socket.on('connect', function() {
 		socket.emit('hello', 'hello world');
 	});
@@ -39,8 +47,8 @@ test('Should squash all socket event streams into one main subject stream', func
 		t.equal(e.message, 'hello world', 'received hello world message from stream.');
 		--messages || done([client1, client2], r);
 	});
-	var client1 = sic.connect('ws://localhost:8081');
-	var client2 = sic.connect('ws://localhost:8081');
+	var client1 = connect('ws://localhost:8081');
+	var client2 = connect('ws://localhost:8081');
 	client1.on('connect', sendMessage.bind(client1));
 	client2.on('connect', sendMessage.bind(client2));
 });
@@ -53,7 +61,7 @@ test('Should be able to push messages to client from server', function(t) {
 			data.socket.emit('message', 111);
 		});
 
-	var socket = sic.connect('ws://localhost:8082');
+	var socket = connect('ws://localhost:8082');
 	socket.on('connect', function() {
 		socket.emit('messages');
 		socket.on('message', function(data) {
@@ -63,7 +71,7 @@ test('Should be able to push messages to client from server', function(t) {
 	});
 });
 
-test('Should be able to create an eventStrem for socket disconnection events', function(t) {
+test('Should be able to create an eventStream for socket disconnection events', function(t) {
 	t.plan(3);
 	var r = new Reiki(8085);
 	var disconnectStream = r.createEventStream('disconnect');
@@ -73,7 +81,7 @@ test('Should be able to create an eventStrem for socket disconnection events', f
 		t.pass('disconnect event handled correctly.')
 		done([socket], r);
 	});
-	var socket = sic.connect('ws://localhost:8085');
+	var socket = connect('ws://localhost:8085');
 	socket.on('connect', function() {
 		socket.disconnect();
 	});
@@ -94,7 +102,7 @@ test('Should be able to be instantiated from httpServer', function(t) {
 		t.equal(d.message, 12);
 		done([socket], r);
 	});
-	var socket = sic.connect('ws://localhost:8083');
+	var socket = connect('ws://localhost:8083');
 	socket.on('connect', function() {
 		socket.emit('messages', 12);
 	});
@@ -111,11 +119,29 @@ test('Should be able to be intantiated with express application', function(t) {
 		t.equal(d.message, 15);
 		done([socket], r);
 	});
-	var socket = sic.connect('ws://localhost:8084');
+	var socket = connect('ws://localhost:8084');
 	socket.on('connect', function() {
 		socket.emit('messages', 15);
 	});
 });
 
-// Broadcast socket test.
+test('Socket.broadcast.emit should produce the expected behaviour', function(t) {
+	t.plan(1);
+	var r = new Reiki(8086);
+	var eventStream = r.createEventStream('messages');
+	eventStream.subscribe(function(data) {
+		data.socket.broadcast.emit('hi', 'coolcoolcool');
+	});
+	var sendMessage = function() {
+		this.emit('messages', 'hello world');
+	};
+	var client1 = connect('ws://localhost:8086');
+	var client2 = connect('ws://localhost:8086');
+	client1.on('hi', function(d) {
+		t.equal(d, 'coolcoolcool');
+		done([client1, client2], r);
+	});
+	client2.on('connect', sendMessage.bind(client2));
+});
+
 // Socket.set test.
