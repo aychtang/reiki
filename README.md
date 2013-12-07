@@ -42,7 +42,8 @@ Creates a new Reiki instance which starts listening for socket connections on th
 
 ```js
 
-### createEventStream(eventName)
+createEventStream(eventName)
+```
 
 Returns a subject event stream which broadcasts events for each independant socket connection.
 
