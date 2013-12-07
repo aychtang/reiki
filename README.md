@@ -36,9 +36,11 @@ messageStream.subscribe(function(data) {
 
 ## Server API Documentation
 
-### new Reiki(port || server)
+### new Reiki(Port number Express/Http Server instance)
 #### Constructor
 Creates a new Reiki instance which starts listening for socket connections on the port or server passed.
+
+```js
 
 ### createEventStream(eventName)
 
