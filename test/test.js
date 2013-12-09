@@ -145,3 +145,19 @@ test('Socket.broadcast.emit should produce the expected behaviour', function(t) 
 });
 
 // Socket.set test.
+test('Socket.set should produce the expected behaivour', function(t) {
+	t.plan(1);
+	var r = new Reiki(8087);
+	var eventStream = r.createEventStream('setName');
+	eventStream.subscribe(function(d) {
+		d.socket.set('name', d.message);
+		d.socket.get('name', function(err, name) {
+			t.equal(name, d.message);
+			done([client1], r);
+		});
+	});
+	var client1 = connect('ws://localhost:8087');
+	client1.on('connect', function() {
+		client1.emit('setName', 'howard');
+	});
+});
