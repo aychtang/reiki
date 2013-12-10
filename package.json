@@ -1,17 +1,9 @@
 {
   "name": "reiki",
   "preferGlobal": true,
-  "version": "0.0.0",
-  "description": "A minimal server side framework influenced by functional reactive programming",
+  "version": "0.0.1",
+  "description": "An Rx.js wrapper which provides a simple event-stream API for building applications with socket.io",
   "contributors": [
-    {
-      "name": "Patrick Stapleton",
-      "email": "patrick@gdi2290.com"
-    },
-    {
-      "name": "Peter de Croos",
-      "email": "cultofmetatron@aumlogic.com"
-    },
     {
       "name": "Howard Tang",
       "email": "aychtang@gmail.com"
@@ -22,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:gdi2290/reiki.js.git"
+    "url": "https://github.com/Cheeseen/reiki"
   },
   "keywords": [
     "FRP",
