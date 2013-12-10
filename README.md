@@ -4,6 +4,8 @@ reiki
 An Rx.js wrapper which provides a stream-like API for building applications
 with socket.io.
 
+[![NPM](https://nodei.co/npm/reiki.png)](https://nodei.co/npm/reiki/)
+
 ## Usage
 
 Reiki helps simplify writing your socket io code by providing an observable stream-like interface.
