@@ -15,8 +15,10 @@ Reiki.prototype = Object.create({});
 
 Reiki.prototype._init = function(io) {
   var that = this;
-  io.on('connection', function(socket) {
+  this.connectionStream = Rx.Observable.fromEvent(io, 'connection');
+  this.connectionStream.subscribe(function(socket) {
     that._addConnectionById(socket);
+    that.disconnectionStream = Rx.Observable.fromEvent(socket, 'disconnect');
     socket.on('disconnect', function() {
       that._removeConnectionById(socket.id);
     });
