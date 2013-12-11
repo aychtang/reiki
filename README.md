@@ -3,7 +3,7 @@ reiki
 
 An Rx.js wrapper which provides a stream-like API for building applications
 with socket.io.
-
+![Travis build status](https://api.travis-ci.org/Cheeseen/reiki.png)
 [![NPM](https://nodei.co/npm/reiki.png)](https://nodei.co/npm/reiki/)
 
 ## Usage
