@@ -29,7 +29,8 @@
   "analyze": false,
   "devDependencies": {
     "tape": "~2.3.0",
-    "socket.io-client": "~0.9.16"
+    "socket.io-client": "~0.9.16",
+    "express": "~3.4.7"
   },
   "license": "MIT",
   "engines": {

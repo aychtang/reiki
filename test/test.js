@@ -144,7 +144,6 @@ test('Socket.broadcast.emit should produce the expected behaviour', function(t) 
 	client2.on('connect', sendMessage.bind(client2));
 });
 
-// Socket.set test.
 test('Socket.set should produce the expected behaivour', function(t) {
 	t.plan(1);
 	var r = new Reiki(8087);
@@ -160,4 +159,14 @@ test('Socket.set should produce the expected behaivour', function(t) {
 	client1.on('connect', function() {
 		client1.emit('setName', 'howard');
 	});
+});
+
+test('Should be able to subscribe to connectionstream after init', function(t) {
+	t.plan(1);
+	var r = new Reiki(8088);
+	r.connectionStream.subscribe(function(d) {
+		t.pass('connectionStream exists.');
+		done([socket], r);
+	});
+	var socket = connect('ws://localhost:8088');
 });
